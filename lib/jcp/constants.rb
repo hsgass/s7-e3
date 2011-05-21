@@ -10,15 +10,15 @@ module JCP
              :proc        => Proc.new { |s, c| Parser.parse_double(s, c) }
       },
 
-      1 => { :proc =>  Proc.new { |s, c| Parser.parse_string(s, c) } },
-      3 => { :proc =>  Proc.new { |s, c| Parser.parse_integer(s, c) } },
-      4 => { :proc =>  Proc.new { |s, c| Parser.parse_float(s, c) } },
+      1 => { :proc  => Proc.new { |s, c| Parser.parse_string(s, c) } },
+      3 => { :proc  => Proc.new { |s, c| Parser.parse_integer(s, c) } },
+      4 => { :proc  => Proc.new { |s, c| Parser.parse_float(s, c) } },
       # class ref:
-      7 => { :proc =>  Proc.new { |s, c| Parser.parse_single_ref(s, c) } },
+      7 => { :proc  => Proc.new { |s, c| Parser.parse_single_ref(s, c) } },
       # string ref:
-      8 => { :proc =>  Proc.new { |s, c| Parser.parse_single_ref(s, c) } },
+      8 => { :proc  => Proc.new { |s, c| Parser.parse_single_ref(s, c) } },
       # field ref:
-      9 => { :proc =>  Proc.new { |s, c| Parser.parse_multi_ref(s, c) } },
+      9 => { :proc  => Proc.new { |s, c| Parser.parse_multi_ref(s, c) } },
       # method ref:
       10 => { :proc => Proc.new { |s, c| Parser.parse_multi_ref(s, c) } },
       # interface:
