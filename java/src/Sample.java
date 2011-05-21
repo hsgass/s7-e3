@@ -1,12 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sample extends ArrayList implements List {
+public class Sample {
 
-    public static final String CONSTANT_STRING = "foo";
-
-    private String field1;
-    private String field2;
-
+    private long positiveLongField = 720575940379279439L;
+//    private long negativeLongField = -610575940379279439L;
+//    private int  positiveIntField  = 2147483637;
+//    private int  negativeIntField  = -1047483637;
 
 }
