@@ -1,33 +1,18 @@
-module JavaClassParser
+module JCP
   module ClassParser
     extend self
-
-    TAGS = {
-      1 => { :proc => Proc.new { |s, c| parse_string s, c } },
-      3 => { :proc => Proc.new { |s, c| parse_integer s, c } },
-      4 => { :proc => Proc.new { |s, c| parse_float s, c } },
-      5 => { :proc        => Proc.new { |s, c| parse_long s, c },
-             :extra_bytes => true },
-      6 => { :proc        => Proc.new { |s, c| parse_double s, c },
-             :extra_bytes => true },
-      7 => { :proc => Proc.new { |s, c| parse_single_ref s, c } }, #class ref
-      8 => { :proc => Proc.new { |s, c| parse_single_ref s, c } }, # string ref
-      9 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } }, # field ref
-      10 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } }, # method ref
-      11 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } }, # interface
-      12 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } } # name/type
-    }
 
     def twos_complement(value, bits)
       (value & ~(1 << bits)) - (value & (1 << bits))
     end
 
     def read_unsigned_int16(stream)
-      stream.read(2).unpack('n').first
+      value = stream.read(2)
+      value.unpack('n').first if value
     end
 
     def parse_string(stream, constants)
-      byte_count = read_unsigned_int16 stream
+      byte_count = read_unsigned_int16(stream)
       constants << stream.read(byte_count).unpack("A#{byte_count}").first
     end
 
@@ -69,7 +54,7 @@ module JavaClassParser
     end
 
     def get_dereferenced_string(stream, constants)
-      index = constants[read_unsigned_int16 stream]
+      index = constants[read_unsigned_int16(stream)]
       constants[index]
     end
 

@@ -1,9 +1,9 @@
-require_relative '../lib/java_class_parser'
+require_relative '../lib/jcp'
 
-module JavaClassParser
+module JCP
   describe JavaClass do
 
-    before do
+    before :all do
       @jc        = JavaClass.new("java/Sample.class")
       @constants = @jc.constants
 #      puts @jc.inspect
@@ -45,8 +45,17 @@ module JavaClassParser
     end
 
     it "should find fields" do
-      @jc.fields.size.should > 1
-      @jc.fields[0].should == 'java/util/List'
+      @jc.fields.empty?.should be_false
+      @jc.fields.each do |f|
+        f.name.should_not be_nil
+      end
+    end
+
+    it "should find methods" do
+      @jc.methods.empty?.should be_false
+      @jc.methods.each do |m|
+        m.name.should_not be_nil
+      end
     end
   end
 end
