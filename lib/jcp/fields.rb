@@ -1,8 +1,8 @@
-require_relative 'class_parser'
+require_relative 'parser'
 
 module JCP
   class Fields
-    include ClassParser
+    include Parser
 
     def initialize(stream, constants)
       @constants = constants
@@ -29,7 +29,7 @@ module JCP
   end
 
   class Field
-    include ClassParser
+    include Parser
 
     attr_accessor :access_flags, :name, :descriptor, :attributes
 

@@ -1,6 +1,6 @@
 module JCP
   class JavaClass
-    include ClassParser
+    include Parser
 
     attr_accessor :version, :constants, :access_flags, :class, :superclass,
                   :interfaces, :fields, :methods, :attributes

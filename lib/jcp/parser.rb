@@ -1,5 +1,5 @@
 module JCP
-  module ClassParser
+  module Parser
     extend self
 
     def twos_complement(value, bits)

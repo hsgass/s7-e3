@@ -1,8 +1,8 @@
-require_relative 'class_parser'
+require_relative 'parser'
 
 module JCP
   class Interfaces
-    include ClassParser
+    include Parser
 
     def initialize(stream, constants)
       @constants  = constants

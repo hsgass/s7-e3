@@ -1,8 +1,8 @@
-require_relative 'class_parser'
+require_relative 'parser'
 
 module JCP
   class AccessFlags
-    include ClassParser
+    include Parser
 
     def initialize(stream)
       flag_bytes    = read_unsigned_int16 stream
