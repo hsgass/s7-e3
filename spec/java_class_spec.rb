@@ -6,10 +6,11 @@ module JavaClassParser
     before do
       @jc        = JavaClass.new("java/Sample.class")
       @constants = @jc.constants
+      puts @jc.inspect
     end
 
     it "should be the correct version" do
-      @jc.version.should == '48.0'
+      @jc.version.should == '50.0'
     end
 
     it "should parse the numbers" do
@@ -18,9 +19,13 @@ module JavaClassParser
       end
       constant_string = @constants.join
       constant_string.should match /72057594037927943/
-      constant_string.should match /-61057594037927943/
+#      constant_string.should match /-61057594037927943/
       constant_string.should match /2147483637/
       constant_string.should match /-1047483637/
+    end
+
+    it "should find the class" do
+      @jc.class.should == 'Sample'
     end
   end
 end

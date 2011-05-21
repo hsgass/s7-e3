@@ -1,19 +1,19 @@
 public class Sample {
 
     private long   positiveLongField = 72057594037927943L;
-    private long   negativeLongField = -61057594037927943L;
+//    private long   negativeLongField = -61057594037927943L;
     private int    positiveIntField  = 2147483637;
     private int    negativeIntField  = -1047483637;
-    private double doubleField       = 123456789.123456789D;
+//    private double doubleField       = 123456789.123456789D;
     private String stringField       = "I am a string.";
 
     public long getPositiveLongField() {
         return positiveLongField;
     }
 
-    public long getNegativeLongField() {
-        return negativeLongField;
-    }
+//    public long getNegativeLongField() {
+//        return negativeLongField;
+//    }
 
     public int getPositiveIntField() {
         return positiveIntField;
@@ -23,9 +23,9 @@ public class Sample {
         return negativeIntField;
     }
 
-    public double getDoubleField() {
-        return doubleField;
-    }
+//    public double getDoubleField() {
+//        return doubleField;
+//    }
 
     public String getStringField() {
         return stringField;
