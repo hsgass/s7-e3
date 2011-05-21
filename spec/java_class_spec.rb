@@ -32,9 +32,11 @@ module JavaClassParser
       @jc.superclass.should == 'java/util/ArrayList'
     end
 
-    it "should be public" do
+    it "should be public final super" do
       @jc.access_flags.include? 'Public'
-      @jc.access_flags.size.should == 1
+      @jc.access_flags.include? 'Final'
+      @jc.access_flags.include? 'Super'
+      @jc.access_flags.size.should == 3
     end
 
     it "should find an interface" do

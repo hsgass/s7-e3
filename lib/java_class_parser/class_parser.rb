@@ -3,19 +3,19 @@ module JavaClassParser
     extend self
 
     TAGS = {
-      1 => {:proc => Proc.new { |s, c| parse_string s, c }},
-      3 => {:proc => Proc.new { |s, c| parse_integer s, c }},
-      4 => {:proc => Proc.new { |s, c| parse_float s, c }},
-      5 => {:proc        => Proc.new { |s, c| parse_long s, c },
-            :extra_bytes => true},
-      6 => {:proc        => Proc.new { |s, c| parse_double s, c },
-            :extra_bytes => true},
-      7 => {:proc => Proc.new { |s, c| parse_single_ref s, c }}, #class ref
-      8 => {:proc => Proc.new { |s, c| parse_single_ref s, c }}, # string ref
-      9 => {:proc => Proc.new { |s, c| parse_multi_ref s, c }}, # field ref
-      10 => {:proc => Proc.new { |s, c| parse_multi_ref s, c }}, # method ref
-      11 => {:proc => Proc.new { |s, c| parse_multi_ref s, c }}, # interface
-      12 => {:proc => Proc.new { |s, c| parse_multi_ref s, c }} # name/type
+      1 => { :proc => Proc.new { |s, c| parse_string s, c } },
+      3 => { :proc => Proc.new { |s, c| parse_integer s, c } },
+      4 => { :proc => Proc.new { |s, c| parse_float s, c } },
+      5 => { :proc        => Proc.new { |s, c| parse_long s, c },
+             :extra_bytes => true },
+      6 => { :proc        => Proc.new { |s, c| parse_double s, c },
+             :extra_bytes => true },
+      7 => { :proc => Proc.new { |s, c| parse_single_ref s, c } }, #class ref
+      8 => { :proc => Proc.new { |s, c| parse_single_ref s, c } }, # string ref
+      9 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } }, # field ref
+      10 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } }, # method ref
+      11 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } }, # interface
+      12 => { :proc => Proc.new { |s, c| parse_multi_ref s, c } } # name/type
     }
 
     def twos_complement(value, bits)
@@ -66,6 +66,11 @@ module JavaClassParser
 
     def parse_multi_ref(stream, constants)
       constants << [read_unsigned_int16(stream), read_unsigned_int16(stream)]
+    end
+
+    def get_dereferenced_string(stream, constants)
+      index = constants[read_unsigned_int16 stream]
+      constants[index]
     end
 
   end
