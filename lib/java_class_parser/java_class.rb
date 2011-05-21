@@ -15,8 +15,8 @@ module JavaClassParser
         get_access_flags stream
         @class      = get_string stream
         @superclass = get_string stream
-#        get_interfaces stream
-#        get_fields stream
+        get_interfaces stream
+        get_fields stream
 #        get_methods stream
 #        get_attributes stream
       end
@@ -58,22 +58,36 @@ module JavaClassParser
     def get_access_flags(stream)
       @access_flags = []
       flag_bytes    = read_unsigned_int16 stream
+      @access_flags << 'Public' if flag_bytes & 0x0001
+      @access_flags << 'Final' if flag_bytes & 0x0010
+      @access_flags << 'Super' if flag_bytes & 0x0020
+      @access_flags << 'Interface' if flag_bytes & 0x0200
+      @access_flags << 'Abstract' if flag_bytes & 0x0400
+      @access_flags << 'Synthetic' if flag_bytes & 0x1000
+      @access_flags << 'Annotation' if flag_bytes & 0x2000
+      @access_flags << 'Enum' if flag_bytes & 0x4000
+      puts "#{flag_bytes}=#{flag_bytes.to_s(2)}"
+      puts "access_flags=#{@access_flags.join ','}"
     end
 
     def get_string(stream)
       index = @constants[read_unsigned_int16 stream]
-      puts "index=#{index}"
       @constants[index]
     end
 
     def get_interfaces(stream)
-      @interfaces = [] << 0
+      @interfaces = []
       count       = read_unsigned_int16 stream
-      puts count
       (1..count).each do
-        tag  = stream.getbyte
-        hash = TAGS[tag]
-        hash[:proc].call(stream, @interfaces) if hash
+         @interfaces << get_string(stream)
+      end
+    end
+
+    def get_fields(stream)
+      @fields = []
+      count       = read_unsigned_int16 stream
+      (1..count).each do
+        @fields << @constants[read_unsigned_int16 stream]
       end
     end
 

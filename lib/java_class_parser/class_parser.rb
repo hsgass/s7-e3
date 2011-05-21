@@ -6,9 +6,9 @@ module JavaClassParser
       1 => {:proc => Proc.new { |s, c| parse_string s, c }},
       3 => {:proc => Proc.new { |s, c| parse_integer s, c }},
       4 => {:proc => Proc.new { |s, c| parse_float s, c }},
-      5 => {:proc       => Proc.new { |s, c| parse_long s, c },
+      5 => {:proc        => Proc.new { |s, c| parse_long s, c },
             :extra_bytes => true},
-      6 => {:proc       => Proc.new { |s, c| parse_double s, c },
+      6 => {:proc        => Proc.new { |s, c| parse_double s, c },
             :extra_bytes => true},
       7 => {:proc => Proc.new { |s, c| parse_single_ref s, c }}, #class ref
       8 => {:proc => Proc.new { |s, c| parse_single_ref s, c }}, # string ref
