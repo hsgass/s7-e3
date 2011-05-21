@@ -2,7 +2,7 @@ require_relative 'class_parser'
 
 module JavaClassParser
   class JavaClass
-    include JavaClassParser::ClassParser
+    include ClassParser
 
     attr_accessor :class_file, :version, :constants
 
