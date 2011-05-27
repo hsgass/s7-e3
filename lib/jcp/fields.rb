@@ -1,71 +1,58 @@
 require_relative 'parser'
 
 module JCP
-  class Fields
+  module Fields
     include Parser
+    extend self
 
-    def initialize(stream, constants)
-      @constants = constants
-      @fields    = []
-      count      = read_unsigned_int16(stream)
+    ACCESS_FLAGS = {
+      0x0001 => 'public',
+      0x0002 => 'private',
+      0x0004 => 'protected',
+      0x0008 => 'static',
+      0x0010 => 'final',
+      0x0040 => 'volatile',
+      0x0080 => 'transient',
+      0x1000 => 'synthetic',
+      0x4000 => 'enum'
+    }
+
+    def parse(stream, constants)
+      fields = []
+      count  = read2_unsigned(stream)
       (0..count - 1).each do
-        @fields << Field.new(stream, @constants)
+        fields << Field.new(stream, constants)
       end
+
+      fields
     end
 
-    def method_missing(name, *args)
-      if @fields.respond_to? name
-        if args.empty?
-          @fields.send(name)
-        else
-          @fields.send(name, *args)
+    class Field
+      include Parser
+
+      attr_reader :access_flags, :name, :descriptor, :attributes
+
+      def initialize(stream, constants)
+        @access_flags = []
+        flag_bytes    = read2_unsigned stream
+        ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
+
+        @name       = constants[read2_unsigned(stream)]
+        @descriptor = constants[read2_unsigned(stream)]
+        get_attributes(stream)
+      end
+
+      def get_attributes(stream)
+        @attributes = []
+        count       = read2_unsigned(stream)
+        (1..count).each do
+          @attributes << Attribute.new(stream, @constants)
         end
       end
-    end
 
-    def to_s
-      @fields.join '  '
-    end
-  end
-
-  class Field
-    include Parser
-
-    attr_accessor :access_flags, :name, :descriptor, :attributes
-
-    def initialize(stream, constants)
-      @constants = constants
-      get_access_flags(stream)
-      @name       = @constants[read_unsigned_int16(stream)]
-      @descriptor = @constants[read_unsigned_int16(stream)]
-      get_attributes(stream)
-    end
-
-    def get_access_flags(stream)
-      flag_bytes    = read_unsigned_int16(stream)
-      @access_flags = []
-      @access_flags << :public if flag_bytes & 0x0001 > 0
-      @access_flags << :private if flag_bytes & 0x0002 > 0
-      @access_flags << :protected if flag_bytes & 0x0004 > 0
-      @access_flags << :static if flag_bytes & 0x0008 > 0
-      @access_flags << :final if flag_bytes & 0x0010 > 0
-      @access_flags << :volatile if flag_bytes & 0x0040 > 0
-      @access_flags << :transient if flag_bytes & 0x0080 > 0
-      @access_flags << :synthetic if flag_bytes & 0x1000 > 0
-      @access_flags << :enum if flag_bytes & 0x4000 > 0
-    end
-
-    def get_attributes(stream)
-      @attributes = []
-      count       = read_unsigned_int16(stream)
-      (1..count).each do
-        @attributes << Attribute.new(stream, @constants)
+      def to_s
+        "#{@attributes.join(' ')} #{@descriptor} #{@name}"
       end
     end
-
-    def to_s
-      "#{@attributes.join(' ')} #{@descriptor} #{@name}"
-    end
   end
-
 end

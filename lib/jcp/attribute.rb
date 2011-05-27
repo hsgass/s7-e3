@@ -3,7 +3,7 @@ module JCP
     include Parser
 
     def initialize(stream, constants)
-      index = read_unsigned_int16(stream)
+      index = read2_unsigned(stream)
       if index
         @name  = constants[index]
         length = stream.read(4).unpack('N').first

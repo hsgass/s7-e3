@@ -6,13 +6,13 @@ module JCP
       (value & ~(1 << bits)) - (value & (1 << bits))
     end
 
-    def read_unsigned_int16(stream)
+    def read2_unsigned(stream)
       value = stream.read(2)
       value.unpack('n').first if value
     end
 
     def parse_string(stream, constants)
-      byte_count = read_unsigned_int16(stream)
+      byte_count = read2_unsigned(stream)
       constants << stream.read(byte_count).unpack("A#{byte_count}").first
     end
 
@@ -46,15 +46,15 @@ module JCP
     end
 
     def parse_single_ref(stream, constants)
-      constants << read_unsigned_int16(stream)
+      constants << read2_unsigned(stream)
     end
 
     def parse_multi_ref(stream, constants)
-      constants << [read_unsigned_int16(stream), read_unsigned_int16(stream)]
+      constants << [read2_unsigned(stream), read2_unsigned(stream)]
     end
 
     def get_dereferenced_string(stream, constants)
-      index = constants[read_unsigned_int16(stream)]
+      index = constants[read2_unsigned(stream)]
       constants[index]
     end
 

@@ -9,13 +9,13 @@ module JCP
       File.open(path) do |stream|
         raise ArgumentError.new("not a java class file") unless check_magic_number stream
         get_version(stream)
-        @constants    = Constants.new(stream)
-        @access_flags = AccessFlags.new(stream)
+        @constants    = ConstantPool.parse(stream)
+        @access_flags = AccessFlags.parse(stream)
         @class        = get_dereferenced_string(stream, @constants)
         @superclass   = get_dereferenced_string(stream, @constants)
-        @interfaces   = Interfaces.new(stream, constants)
-        @fields       = Fields.new(stream, @constants)
-        @methods      = Methods.new(stream, @constants)
+        @interfaces   = Interfaces.parse(stream, constants)
+        @fields       = Fields.parse(stream, @constants)
+#        @methods      = Methods.parse(stream, @constants)
       end
     end
 
@@ -30,8 +30,8 @@ module JCP
     end
 
     def get_version(stream)
-      minor    = read_unsigned_int16 stream
-      major    = read_unsigned_int16 stream
+      minor    = read2_unsigned stream
+      major    = read2_unsigned stream
       @version = "#{major}.#{minor}"
     end
   end
