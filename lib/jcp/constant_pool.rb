@@ -42,7 +42,13 @@ module JCP
     def [](index)
       return index if index.is_a? String or index.nil?
       v = @constants[index]
-      v = @constants[v] if v.is_a? Fixnum
+
+      # a Fixnum value can be either a pointer to another index or a value. %|
+      if v.is_a? Fixnum
+        t = @constants[v]
+        v = t if t
+      end
+
       v = [self[v[0]], self[v[1]]] if v.is_a? Array
       v
     end

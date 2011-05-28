@@ -16,24 +16,33 @@ module JCP
 
     class ConstantValue
       include JCP
-      def initialize(stream, constant_pool)
+
+      def initialize(stream, constant_pool, limit)
         @value = constant_pool[read2_unsigned(stream)]
       end
 
       def to_s
-        @value
+        @value.to_s
+      end
+    end
+
+    class Code
+      include JCP
+
+      def initialize(stream, constant_pool, limit)
+        limit.times { stream.readbyte unless stream.eof? }
+      end
+
+      def to_s
+        "Code"
       end
     end
 
     class NoClass
       include JCP
-      def initialize(stream, constant_pool, limit)
-        @value = constant_pool[read2_unsigned(stream)]
-        (limit - 2).times { stream.readbyte unless stream.eof? }
-      end
 
-      def to_s
-        @value
+      def initialize(stream, constant_pool, limit)
+        limit.times { stream.readbyte unless stream.eof? }
       end
     end
   end

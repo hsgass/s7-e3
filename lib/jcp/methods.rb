@@ -35,7 +35,7 @@ module JCP
       end
 
       def to_s
-        "public #{@descriptor} #{@name}()"
+        "#{@access_flags.join(' ')} #{@descriptor} #{@name} #{@attributes}"
       end
     end
   end

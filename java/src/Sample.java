@@ -1,36 +1,50 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public final class Sample extends ArrayList implements List {
 
-    private long   positiveLongField = 72057594037927943L;
-    private long   negativeLongField = -61057594037927943L;
-    private int    positiveIntField  = 2147483637;
-    private int    negativeIntField  = -1047483637;
-    private double doubleField       = 123456789.123456789D;
-    private String stringField       = "I am a string.";
+    public static final  long   positiveLongField = 72057594037927943L;
+    public static final  long   negativeLongField = -61057594037927943L;
+    private static final int    positiveIntField  = 2147483637;
+    private static final int    negativeIntField  = -1047483637;
+    public static final  double doubleField       = 123456789.123456789D;
+    public static final  double negativeDouble    = -123456789.123456789D;
+    public static final  String stringField       = "I am a string.";
 
-    public long getPositiveLongField() {
-        return positiveLongField;
+    private boolean booleanField;
+    private Date    dateField;
+    private String  privateString;
+
+    public Sample(int i, String privateString) {
+        super(i);
+        this.privateString = privateString;
     }
 
-    public long getNegativeLongField() {
-        return negativeLongField;
+    public Sample() {
     }
 
-    public int getPositiveIntField() {
-        return positiveIntField;
+    public boolean isBooleanField() {
+        return booleanField;
     }
 
-    public int getNegativeIntField() {
-        return negativeIntField;
+    public void setBooleanField(boolean booleanField) {
+        this.booleanField = booleanField;
     }
 
-    public double getDoubleField() {
-        return doubleField;
+    public Date getDateField() {
+        return dateField;
     }
 
-    public String getStringField() {
-        return stringField;
+    public void setDateField(Date dateField) {
+        this.dateField = dateField;
+    }
+
+    public String getPrivateString() {
+        return privateString;
+    }
+
+    public void setPrivateString(String privateString) {
+        this.privateString = privateString;
     }
 }

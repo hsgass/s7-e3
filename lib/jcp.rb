@@ -15,7 +15,6 @@ module JCP
     'F' => 'float',
     'I' => 'int',
     'J' => 'long',
-    'L' => 'reference',
     'S' => 'short',
     'Z' => 'boolean'
   }
