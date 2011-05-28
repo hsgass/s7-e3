@@ -29,7 +29,7 @@ module JCP
       # shift each byte into the value according to its position,
       # starting at the smallest number.
       bytes.reverse!
-      value = (0..7).inject(0) { |v, i| v += (bytes[i] << (8 * i)) }
+      value = (0..7).inject(0) { |v, i| v + (bytes[i] << (8 * i)) }
 
       twos_complement(value, 63)
     end

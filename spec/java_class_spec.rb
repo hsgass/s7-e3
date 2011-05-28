@@ -4,7 +4,7 @@ module JCP
   describe JavaClass do
 
     before :all do
-      @jc            = JavaClass.new("java/Sample.class")
+      @jc            = JavaClass.new("spec/fixtures/Sample.class")
       @constant_pool = @jc.constant_pool
     end
 

@@ -22,27 +22,32 @@ module JCP
   def parse_descriptor(stream, constant_pool)
     d = constant_pool[read2_unsigned(stream)]
     d.gsub! /[\(\)]/, ''
+
     descriptor = DESCRIPTORS[d]
-    unless descriptor
+
+    if descriptor.nil?
       descriptor = d[1..-1].gsub(/\//, '.').chop if d[0] == 'L'
       descriptor = "#{d[1..-1]}[]" if d[0] == '['
     end
+
     descriptor
   end
 
   def parse_elements(clazz, stream, constant_pool)
-    arr   = []
+    elements   = []
     count = read2_unsigned(stream)
     (1..count).each do
-      arr << clazz.new(stream, constant_pool) unless stream.eof?
+      elements << clazz.new(stream, constant_pool) unless stream.eof?
     end
-    arr
+
+    elements
   end
 
   def parse_access_flags(flag_hash, stream)
     access_flags = []
     flag_bytes   = read2_unsigned stream
     flag_hash.each { |k, v| access_flags << v if (flag_bytes & k > 0) }
+
     access_flags
   end
 
@@ -52,11 +57,11 @@ module JCP
     (1..count).each do
       attributes << Attributes.parse(stream, constant_pool)
     end
+
     attributes
   end
 
   def read2_unsigned(stream)
-    value = stream.read(2)
-    value.unpack('n').first if value
+    stream.read(2).unpack('n').first
   end
 end

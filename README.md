@@ -5,7 +5,7 @@ Retrieves field and method information from a Java class file.
 
     require 'jcp'
     #=> true
-    java_class = JCP::JavaClass.new('java/Sample.class')
+    java_class = JCP::JavaClass.new('spec/fixtures/Sample.class')
     #=> public final super class Sample extends java.util.ArrayList implements java.util.List
     puts java_class.fields
     #=> public static final long positiveLongField [72057594037927943]

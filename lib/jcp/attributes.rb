@@ -3,14 +3,11 @@ module JCP
     include JCP
     extend self
 
-    def self.parse(stream, constant_pool)
+    def parse(stream, constant_pool)
       name  = constant_pool[read2_unsigned(stream)]
       limit = stream.read(4).unpack('N').first
-      begin
-        clazz = Attributes.const_get(name) || NoClass
-      rescue
-        clazz = NoClass
-      end
+
+      clazz = Attributes.const_get(name) || NoClass
       clazz.new(stream, constant_pool, limit)
     end
 
