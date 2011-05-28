@@ -17,6 +17,20 @@ module JCP
       0x4000 => 'enum'
     }
 
+    DESCRIPTORS = {
+      'B'                 => 'byte',
+      'C'                 => 'char',
+      'D'                 => 'double',
+      'F'                 => 'float',
+      'I'                 => 'int',
+      'J'                 => 'long',
+      'L'                 => 'reference',
+      'S'                 => 'short',
+      'Z'                 => 'boolean',
+      'Ljava/lang/String;' => 'String',
+      'xx'                => 'array'
+    }
+
     def parse(stream, constant_pool)
       fields = []
       count  = read2_unsigned(stream)
@@ -38,7 +52,8 @@ module JCP
         ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
 
         @name       = constant_pool[read2_unsigned(stream)]
-        @descriptor = constant_pool[read2_unsigned(stream)]
+        d           = constant_pool[read2_unsigned(stream)]
+        @descriptor = DESCRIPTORS[d] || d
         get_attributes(stream)
       end
 
@@ -51,7 +66,7 @@ module JCP
       end
 
       def to_s
-        "#{@attributes.join(' ')} #{@descriptor} #{@name}"
+        "#{@access_flags.join(' ')} #{@descriptor} #{@name}"
       end
     end
   end

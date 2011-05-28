@@ -2,25 +2,25 @@ module JCP
   class JavaClass
     include Parser
 
-    attr_accessor :version, :constant_pool, :access_flags, :class, :superclass,
-                  :interfaces, :fields, :methods, :attributes
+    attr_accessor :version, :constant_pool, :access_flags, :class,
+                  :superclass, :interfaces, :fields, :methods
 
     def initialize(path)
       File.open(path) do |stream|
-        raise ArgumentError.new("not a java class file") unless check_magic_number stream
+        raise ArgumentError.new("not a class") unless check_magic_number stream
         get_version(stream)
-        @constant_pool    = ConstantPool.new(stream)
-        @access_flags = AccessFlags.parse(stream)
-        @class        = get_dereferenced_string(stream, @constant_pool).gsub(/\//, '.')
-        @superclass   = get_dereferenced_string(stream, @constant_pool).gsub(/\//, '.')
-        @interfaces   = Interfaces.parse(stream, constant_pool)
-        @fields       = Fields.parse(stream, @constant_pool)
-        @methods      = Methods.parse(stream, @constant_pool)
+        @constant_pool = ConstantPool.new(stream)
+        @access_flags  = AccessFlags.parse(stream)
+        @class         = @constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
+        @superclass    = @constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
+        @interfaces    = Interfaces.parse(stream, constant_pool)
+        @fields        = Fields.parse(stream, @constant_pool)
+        @methods       = Methods.parse(stream, @constant_pool)
       end
     end
 
     def to_s
-      "#{access_flags.join(' ')} class #{@class} extends #{@superclass}"+
+      "#{access_flags.join(' ')} class #{@class} extends #{@superclass}" +
         " implements #{@interfaces.join ' '}"
     end
 

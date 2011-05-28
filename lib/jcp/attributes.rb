@@ -4,7 +4,7 @@ module JCP
 
     def self.parse(stream, constant_pool)
       index = read2_unsigned(stream)
-      return nil if index.nil?
+
       name  = constant_pool[index]
       limit = stream.read(4).unpack('N').first
       begin
@@ -22,18 +22,6 @@ module JCP
 
       def to_s
         @value
-      end
-    end
-
-    class Code
-      def initialize(stream, constant_pool, limit)
-        limit.times { stream.readbyte unless stream.eof? }
-      end
-    end
-
-    class Exceptions
-      def initialize(stream, constant_pool, limit)
-        limit.times { stream.readbyte unless stream.eof? }
       end
     end
 

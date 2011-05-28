@@ -5,6 +5,6 @@ require_relative 'jcp/fields'
 require_relative 'jcp/interfaces'
 require_relative 'jcp/java_class'
 require_relative 'jcp/methods'
-require_relative 'jcp/attribute'
+require_relative 'jcp/attributes'
 
 

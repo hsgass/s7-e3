@@ -19,37 +19,40 @@ module JCP
     def initialize(stream)
       # the constant pool index starts at 1,
       # so fill in the zeroth index of the array
-      @constant_pool = [] << 0
+      @constants = [] << 0
 
       # count indicates the number of "slots" in the constant pool.
       # longs and doubles consume 2 slots, so there must
       # be one less read per long or double value.
-      limit = read2_unsigned stream
-      read  = 1
-      while (read < limit)
-        tag  = stream.getbyte
-        hash = TAGS[tag]
-        if hash
-          Parser.send(hash[:action], stream, @constant_pool)
-          read += hash[:extra_bytes] ? 2 : 1
+      limit = (read2_unsigned stream) - 1
+      skip  = false
+      (1..limit).each do
+        if skip
+          @constants << nil
+          skip = false
+        else
+          tag  = stream.getbyte
+          hash = TAGS[tag]
+           @constants << send(hash[:action], stream)
+          skip = hash[:extra_bytes]
         end
       end
     end
 
     def [](index)
       return index if index.is_a? String or index.nil?
-      v = @constant_pool[index]
-      v = @constant_pool[v] if v.is_a? Fixnum
+      v = @constants[index]
+      v = @constants[v] if v.is_a? Fixnum
       v = [self[v[0]], self[v[1]]] if v.is_a? Array
       v
     end
 
     def each
-      @constant_pool.each
+      @constants.each
     end
 
     def join
-      @constant_pool.join
+      @constants.join
     end
   end
 end

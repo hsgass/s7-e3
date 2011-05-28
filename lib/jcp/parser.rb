@@ -11,20 +11,20 @@ module JCP
       value.unpack('n').first if value
     end
 
-    def parse_string(stream, constant_pool)
+    def parse_string(stream)
       byte_count = read2_unsigned(stream)
-      constant_pool << stream.read(byte_count).unpack("A#{byte_count}").first
+      stream.read(byte_count).unpack("A#{byte_count}").first
     end
 
-    def parse_integer(stream, constant_pool)
-      constant_pool << twos_complement(stream.read(4).unpack('N').first, 31)
+    def parse_integer(stream)
+      twos_complement(stream.read(4).unpack('N').first, 31)
     end
 
-    def parse_float(stream, constant_pool)
-      constant_pool << stream.read(4).unpack('g').first
+    def parse_float(stream)
+      stream.read(4).unpack('g').first
     end
 
-    def parse_long(stream, constant_pool)
+    def parse_long(stream)
       # longs are big-endian and there's no pattern to parse them,
       # so read the bytes one at a time.
       bytes = []
@@ -35,22 +35,19 @@ module JCP
       bytes.reverse!
       value = (0..7).inject(0) { |v, i| v += (bytes[i] << (8 * i)) }
 
-      # 8-byte values take 2 places in the constant table
-      constant_pool << twos_complement(value, 63)
-      constant_pool << nil
+      twos_complement(value, 63)
     end
 
-    def parse_double(stream, constant_pool)
-      constant_pool << stream.read(8).unpack('G').first
-      constant_pool << nil
+    def parse_double(stream)
+      stream.read(8).unpack('G').first
     end
 
-    def parse_single_ref(stream, constant_pool)
-      constant_pool << read2_unsigned(stream)
+    def parse_single_ref(stream)
+      read2_unsigned(stream)
     end
 
-    def parse_multi_ref(stream, constant_pool)
-      constant_pool << [read2_unsigned(stream), read2_unsigned(stream)]
+    def parse_multi_ref(stream)
+      [read2_unsigned(stream), read2_unsigned(stream)]
     end
 
     def get_dereferenced_string(stream, constant_pool)
