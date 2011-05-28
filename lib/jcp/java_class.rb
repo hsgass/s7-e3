@@ -24,7 +24,7 @@ module JCP
         @access_flags  = parse_access_flags ACCESS_FLAGS, stream
         @class         = @constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
         @superclass    = @constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
-        @interfaces    = Interfaces.parse(stream, constant_pool)
+        @interfaces    = Interfaces.parse(stream, @constant_pool)
         @fields        = Fields.parse(stream, @constant_pool)
         @methods       = Methods.parse(stream, @constant_pool)
       end
