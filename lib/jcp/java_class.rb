@@ -2,20 +2,20 @@ module JCP
   class JavaClass
     include Parser
 
-    attr_accessor :version, :constants, :access_flags, :class, :superclass,
+    attr_accessor :version, :constant_pool, :access_flags, :class, :superclass,
                   :interfaces, :fields, :methods, :attributes
 
     def initialize(path)
       File.open(path) do |stream|
         raise ArgumentError.new("not a java class file") unless check_magic_number stream
         get_version(stream)
-        @constants    = ConstantPool.parse(stream)
+        @constant_pool    = ConstantPool.new(stream)
         @access_flags = AccessFlags.parse(stream)
-        @class        = get_dereferenced_string(stream, @constants)
-        @superclass   = get_dereferenced_string(stream, @constants)
-        @interfaces   = Interfaces.parse(stream, constants)
-        @fields       = Fields.parse(stream, @constants)
-#        @methods      = Methods.parse(stream, @constants)
+        @class        = get_dereferenced_string(stream, @constant_pool)
+        @superclass   = get_dereferenced_string(stream, @constant_pool)
+        @interfaces   = Interfaces.parse(stream, constant_pool)
+        @fields       = Fields.parse(stream, @constant_pool)
+        @methods      = Methods.parse(stream, @constant_pool)
       end
     end
 

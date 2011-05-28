@@ -5,11 +5,11 @@ module JCP
     include Parser
     extend self
 
-    def parse(stream, constants)
+    def parse(stream, constant_pool)
       interfaces = []
       count      = read2_unsigned stream
       (1..count).each do
-        interfaces << get_dereferenced_string(stream, constants)
+        interfaces << get_dereferenced_string(stream, constant_pool)
       end
       interfaces
     end

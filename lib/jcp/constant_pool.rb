@@ -1,7 +1,6 @@
 module JCP
-  module ConstantPool
+  class ConstantPool
     include Parser
-    extend self
 
     TAGS = {
       5 =>  { :action => :parse_long, :extra_bytes => true },
@@ -17,10 +16,10 @@ module JCP
       12 => { :action => :parse_multi_ref }   # name/type
     }
 
-    def parse(stream)
+    def initialize(stream)
       # the constant pool index starts at 1,
       # so fill in the zeroth index of the array
-      @constants = [] << 0
+      @constant_pool = [] << 0
 
       # count indicates the number of "slots" in the constant pool.
       # longs and doubles consume 2 slots, so there must
@@ -31,12 +30,26 @@ module JCP
         tag  = stream.getbyte
         hash = TAGS[tag]
         if hash
-          Parser.send(hash[:action], stream, @constants)
+          Parser.send(hash[:action], stream, @constant_pool)
           read += hash[:extra_bytes] ? 2 : 1
         end
       end
+    end
 
-      @constants
+    def [](index)
+      return index if index.is_a? String or index.nil?
+      v = @constant_pool[index]
+      v = @constant_pool[v] if v.is_a? Fixnum
+      v = [self[v[0]], self[v[1]]] if v.is_a? Array
+      v
+    end
+
+    def each
+      @constant_pool.each
+    end
+
+    def join
+      @constant_pool.join
     end
   end
 end

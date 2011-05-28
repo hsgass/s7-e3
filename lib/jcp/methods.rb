@@ -20,11 +20,11 @@ module JCP
       0x10000 => 'synthetic'
     }
 
-    def parse(stream, constants)
+    def parse(stream, constant_pool)
       methods = []
       count   = read2_unsigned(stream)
       (0..count - 1).each do
-        methods << Method.new(stream, constants)
+        methods << Method.new(stream, constant_pool) unless stream.eof?
       end
 
       methods
@@ -35,25 +35,25 @@ module JCP
 
       attr_reader :access_flags, :name, :descriptor, :attributes
 
-      def initialize(stream, constants)
+      def initialize(stream, constant_pool)
         @access_flags = []
         flag_bytes    = read2_unsigned(stream)
         ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
 
         index = read2_unsigned(stream)
         if index
-          @name       = constants[index]
-          @descriptor = constants[index]
-          get_attributes(stream)
+          @name       = constant_pool[index]
+          @descriptor = constant_pool[index]
+          get_attributes(stream, constant_pool)
         end
       end
 
-      def get_attributes(stream)
+      def get_attributes(stream, constant_pool)
         @attributes = []
         count       = read2_unsigned(stream)
-        (1..count-1).each do
-          @attributes << Attribute.new(stream, @constants)
-        end if count < 10
+        (1..count).each do
+          @attributes << Attributes.parse(stream, constant_pool)
+        end
       end
 
       def to_s

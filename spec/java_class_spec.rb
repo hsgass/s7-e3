@@ -5,7 +5,7 @@ module JCP
 
     before :all do
       @jc        = JavaClass.new("java/Sample.class")
-      @constants = @jc.constants
+      @constant_pool = @jc.constant_pool
 #      puts @jc.inspect
     end
 
@@ -14,10 +14,10 @@ module JCP
     end
 
     it "should find the correct numbers" do
-#      @constants.each_with_index do |c, i|
+#      @constant_pool.each_with_index do |c, i|
 #        puts "#{i} = #{c}"
 #      end
-      constant_string = @constants.join
+      constant_string = @constant_pool.join
       constant_string.should match /72057594037927943/
       constant_string.should match /-61057594037927943/
       constant_string.should match /2147483637/
@@ -52,10 +52,15 @@ module JCP
     end
 
     it "should find methods" do
+      puts @jc
+      puts @jc.fields
+      puts @jc.methods
+
       @jc.methods.empty?.should be_false
       @jc.methods.each do |m|
         m.name.should_not be_nil
       end
+
     end
   end
 end
