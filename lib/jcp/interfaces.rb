@@ -1,8 +1,6 @@
-require_relative 'parser'
-
 module JCP
   module Interfaces
-    include Parser
+    include JCP
     extend self
 
     def parse(stream, constant_pool)

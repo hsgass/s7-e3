@@ -1,14 +1,10 @@
 module JCP
   module Parser
+    include JCP
     extend self
 
     def twos_complement(value, bits)
       (value & ~(1 << bits)) - (value & (1 << bits))
-    end
-
-    def read2_unsigned(stream)
-      value = stream.read(2)
-      value.unpack('n').first if value
     end
 
     def parse_string(stream)
@@ -49,11 +45,5 @@ module JCP
     def parse_multi_ref(stream)
       [read2_unsigned(stream), read2_unsigned(stream)]
     end
-
-    def get_dereferenced_string(stream, constant_pool)
-      index = constant_pool[read2_unsigned(stream)]
-      constant_pool[index]
-    end
-
   end
 end

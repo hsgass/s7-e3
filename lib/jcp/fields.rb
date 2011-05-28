@@ -1,8 +1,6 @@
-require_relative 'parser'
-
 module JCP
   module Fields
-    include Parser
+    include JCP
     extend self
 
     ACCESS_FLAGS = {
@@ -18,36 +16,19 @@ module JCP
     }
 
     def parse(stream, constant_pool)
-      fields = []
-      count  = read2_unsigned(stream)
-      (1..count).each do
-        fields << Field.new(stream, constant_pool)
-      end
-
-      fields
+      parse_elements(Field, stream, constant_pool)
     end
 
     class Field
-      include Parser, JCP
+      include JCP
 
       attr_reader :access_flags, :name, :descriptor, :attributes
 
       def initialize(stream, constant_pool)
-        @access_flags = []
-        flag_bytes    = read2_unsigned stream
-        ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
-
-        @name       = constant_pool[read2_unsigned(stream)]
-        @descriptor = parse_descriptor(constant_pool, stream)
-        get_attributes(stream)
-      end
-
-      def get_attributes(stream)
-        @attributes = []
-        count       = read2_unsigned(stream)
-        (1..count).each do
-          @attributes << Attributes.parse(stream, @constant_pool)
-        end
+        @access_flags = parse_access_flags ACCESS_FLAGS, stream
+        @name         = constant_pool[read2_unsigned(stream)]
+        @descriptor   = parse_descriptor(stream, constant_pool)
+        @attributes   = get_attributes(stream, constant_pool)
       end
 
       def to_s

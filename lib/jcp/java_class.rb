@@ -1,16 +1,27 @@
 module JCP
   class JavaClass
-    include Parser
+    include JCP
 
     attr_accessor :version, :constant_pool, :access_flags, :class,
                   :superclass, :interfaces, :fields, :methods
+
+    ACCESS_FLAGS = {
+      0x0001 => 'public',
+      0x0010 => 'final',
+      0x0020 => 'super',
+      0x0200 => 'interface',
+      0x0400 => 'abstract',
+      0x1000 => 'synthetic',
+      0x2000 => 'annotation',
+      0x4000 => 'enum'
+    }
 
     def initialize(path)
       File.open(path) do |stream|
         raise ArgumentError.new("not a class") unless check_magic_number stream
         get_version(stream)
         @constant_pool = ConstantPool.new(stream)
-        @access_flags  = AccessFlags.parse(stream)
+        @access_flags  = parse_access_flags ACCESS_FLAGS, stream
         @class         = @constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
         @superclass    = @constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
         @interfaces    = Interfaces.parse(stream, constant_pool)

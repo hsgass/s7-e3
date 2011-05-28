@@ -4,11 +4,19 @@ module JCP
   describe JavaClass do
 
     before :all do
-      @jc        = JavaClass.new("java/Sample.class")
+      @jc            = JavaClass.new("java/Sample.class")
       @constant_pool = @jc.constant_pool
     end
 
     it "should be the correct version" do
+      puts "\n"
+      puts @jc
+      puts "\nFields\n"
+      puts @jc.fields
+      puts "\nMethods\n"
+      puts @jc.methods
+      puts "\n"
+
       @jc.version.should == '50.0'
     end
 
@@ -48,15 +56,10 @@ module JCP
     end
 
     it "should find methods" do
-      puts @jc
-      puts @jc.fields
-      puts @jc.methods
-
       @jc.methods.empty?.should be_false
       @jc.methods.each do |m|
         m.name.should_not be_nil
       end
-
     end
   end
 end

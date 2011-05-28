@@ -1,6 +1,6 @@
 module JCP
   class ConstantPool
-    include Parser
+    include Parser, JCP
 
     TAGS = {
       5 =>  { :action => :parse_long, :extra_bytes => true },
@@ -21,7 +21,7 @@ module JCP
       # so fill in the zeroth index of the array
       @constants = [] << 0
 
-      # count indicates the number of "slots" in the constant pool.
+      # limit indicates the number of "slots" in the constant pool.
       # longs and doubles consume 2 slots, so there must
       # be one less read per long or double value.
       limit = (read2_unsigned stream) - 1
@@ -33,11 +33,10 @@ module JCP
         else
           tag  = stream.getbyte
           hash = TAGS[tag]
-           @constants << send(hash[:action], stream)
           skip = hash[:extra_bytes]
+          @constants << send(hash[:action], stream)
         end
       end
-      @constants.each {|c| puts c}
     end
 
     def [](index)
