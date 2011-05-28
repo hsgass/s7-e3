@@ -9,7 +9,7 @@ module JCP
       interfaces = []
       count      = read2_unsigned stream
       (1..count).each do
-        interfaces << get_dereferenced_string(stream, constant_pool)
+        interfaces << get_dereferenced_string(stream, constant_pool).gsub(/\//, '.')
       end
       interfaces
     end

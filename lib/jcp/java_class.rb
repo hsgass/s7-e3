@@ -11,8 +11,8 @@ module JCP
         get_version(stream)
         @constant_pool    = ConstantPool.new(stream)
         @access_flags = AccessFlags.parse(stream)
-        @class        = get_dereferenced_string(stream, @constant_pool)
-        @superclass   = get_dereferenced_string(stream, @constant_pool)
+        @class        = get_dereferenced_string(stream, @constant_pool).gsub(/\//, '.')
+        @superclass   = get_dereferenced_string(stream, @constant_pool).gsub(/\//, '.')
         @interfaces   = Interfaces.parse(stream, constant_pool)
         @fields       = Fields.parse(stream, @constant_pool)
         @methods      = Methods.parse(stream, @constant_pool)
@@ -20,7 +20,8 @@ module JCP
     end
 
     def to_s
-      "#{access_flags} class #{@class} extends #{@superclass} implements #{@interfaces}"
+      "#{access_flags.join(' ')} class #{@class} extends #{@superclass}"+
+        " implements #{@interfaces.join ' '}"
     end
 
     private

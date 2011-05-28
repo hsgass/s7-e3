@@ -6,7 +6,6 @@ module JCP
     before :all do
       @jc        = JavaClass.new("java/Sample.class")
       @constant_pool = @jc.constant_pool
-#      puts @jc.inspect
     end
 
     it "should be the correct version" do
@@ -14,9 +13,6 @@ module JCP
     end
 
     it "should find the correct numbers" do
-#      @constant_pool.each_with_index do |c, i|
-#        puts "#{i} = #{c}"
-#      end
       constant_string = @constant_pool.join
       constant_string.should match /72057594037927943/
       constant_string.should match /-61057594037927943/
@@ -29,7 +25,7 @@ module JCP
     end
 
     it "should find the superclass" do
-      @jc.superclass.should == 'java/util/ArrayList'
+      @jc.superclass.should == 'java.util.ArrayList'
     end
 
     it "should be public final super" do
@@ -41,7 +37,7 @@ module JCP
 
     it "should find an interface" do
       @jc.interfaces.size.should == 1
-      @jc.interfaces[0].should == 'java/util/List'
+      @jc.interfaces[0].should == 'java.util.List'
     end
 
     it "should find fields" do

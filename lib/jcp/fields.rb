@@ -20,7 +20,7 @@ module JCP
     def parse(stream, constant_pool)
       fields = []
       count  = read2_unsigned(stream)
-      (0..count - 1).each do
+      (1..count).each do
         fields << Field.new(stream, constant_pool)
       end
 

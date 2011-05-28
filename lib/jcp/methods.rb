@@ -23,7 +23,7 @@ module JCP
     def parse(stream, constant_pool)
       methods = []
       count   = read2_unsigned(stream)
-      (0..count - 1).each do
+      (1..count).each do
         methods << Method.new(stream, constant_pool) unless stream.eof?
       end
 
@@ -40,12 +40,9 @@ module JCP
         flag_bytes    = read2_unsigned(stream)
         ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
 
-        index = read2_unsigned(stream)
-        if index
-          @name       = constant_pool[index]
-          @descriptor = constant_pool[index]
-          get_attributes(stream, constant_pool)
-        end
+        @name       = constant_pool[read2_unsigned(stream)]
+        @descriptor = constant_pool[read2_unsigned(stream)]
+        get_attributes(stream, constant_pool)
       end
 
       def get_attributes(stream, constant_pool)
