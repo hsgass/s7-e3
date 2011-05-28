@@ -37,6 +37,7 @@ module JCP
           skip = hash[:extra_bytes]
         end
       end
+      @constants.each {|c| puts c}
     end
 
     def [](index)

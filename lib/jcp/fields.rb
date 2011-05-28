@@ -17,20 +17,6 @@ module JCP
       0x4000 => 'enum'
     }
 
-    DESCRIPTORS = {
-      'B'                 => 'byte',
-      'C'                 => 'char',
-      'D'                 => 'double',
-      'F'                 => 'float',
-      'I'                 => 'int',
-      'J'                 => 'long',
-      'L'                 => 'reference',
-      'S'                 => 'short',
-      'Z'                 => 'boolean',
-      'Ljava/lang/String;' => 'String',
-      'xx'                => 'array'
-    }
-
     def parse(stream, constant_pool)
       fields = []
       count  = read2_unsigned(stream)
@@ -42,7 +28,7 @@ module JCP
     end
 
     class Field
-      include Parser
+      include Parser, JCP
 
       attr_reader :access_flags, :name, :descriptor, :attributes
 
@@ -52,8 +38,7 @@ module JCP
         ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
 
         @name       = constant_pool[read2_unsigned(stream)]
-        d           = constant_pool[read2_unsigned(stream)]
-        @descriptor = DESCRIPTORS[d] || d
+        @descriptor = parse_descriptor(constant_pool, stream)
         get_attributes(stream)
       end
 

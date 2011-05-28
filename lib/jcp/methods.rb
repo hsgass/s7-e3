@@ -31,7 +31,7 @@ module JCP
     end
 
     class Method
-      include Parser
+      include Parser, JCP
 
       attr_reader :access_flags, :name, :descriptor, :attributes
 
@@ -41,7 +41,7 @@ module JCP
         ACCESS_FLAGS.each { |k, v| @access_flags << v if (flag_bytes & k > 0) }
 
         @name       = constant_pool[read2_unsigned(stream)]
-        @descriptor = constant_pool[read2_unsigned(stream)]
+        @descriptor = parse_descriptor(constant_pool, stream)
         get_attributes(stream, constant_pool)
       end
 
@@ -54,7 +54,7 @@ module JCP
       end
 
       def to_s
-        "#{@name}"
+        "public #{@descriptor} #{@name}()"
       end
     end
   end
