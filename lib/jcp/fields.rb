@@ -28,7 +28,7 @@ module JCP
         @access_flags = parse_access_flags ACCESS_FLAGS, stream
         @name         = constant_pool[read2_unsigned(stream)]
         @descriptor   = parse_descriptor(stream, constant_pool)
-        @attributes   = get_attributes(stream, constant_pool)
+        @attributes   = parse_attributes(stream, constant_pool)
       end
 
       def to_s

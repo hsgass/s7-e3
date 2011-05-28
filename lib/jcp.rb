@@ -47,17 +47,17 @@ module JCP
     access_flags
   end
 
-  def read2_unsigned(stream)
-    value = stream.read(2)
-    value.unpack('n').first if value
-  end
-
-  def get_attributes(stream, constant_pool)
+  def parse_attributes(stream, constant_pool)
     attributes = []
     count      = read2_unsigned(stream)
     (1..count).each do
       attributes << Attributes.parse(stream, constant_pool)
     end
     attributes
+  end
+
+  def read2_unsigned(stream)
+    value = stream.read(2)
+    value.unpack('n').first if value
   end
 end
