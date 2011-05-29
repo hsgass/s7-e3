@@ -5,9 +5,9 @@ module JCP
 
     def parse(stream, constant_pool)
       interfaces = []
-      count      = read2_unsigned stream
+      count      = read2_bytes stream
       (1..count).each do
-        interfaces << constant_pool[read2_unsigned(stream)].gsub(/\//, '.')
+        interfaces << constant_pool[read2_bytes(stream)].gsub(/\//, '.')
       end
       interfaces
     end
