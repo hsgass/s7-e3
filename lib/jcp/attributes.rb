@@ -1,18 +1,18 @@
 module JCP
   module Attributes
-    include JCP
+    include Parser
     extend self
 
     def parse(stream, constant_pool)
-      name  = constant_pool[read2_unsigned(stream)]
+      class_name  = constant_pool[read2_unsigned(stream)]
       limit = stream.read(4).unpack('N').first
 
-      clazz = Attributes.const_get(name) || NoClass
-      clazz.new(stream, constant_pool, limit)
+      attribute_class = Attributes.const_get(class_name) || NoClass
+      attribute_class.new(stream, constant_pool, limit)
     end
 
     class ConstantValue
-      include JCP
+      include Parser
 
       def initialize(stream, constant_pool, limit)
         @value = constant_pool[read2_unsigned(stream)]
@@ -24,7 +24,7 @@ module JCP
     end
 
     class Code
-      include JCP
+      include Parser
 
       def initialize(stream, constant_pool, limit)
         limit.times { stream.readbyte unless stream.eof? }
@@ -36,7 +36,7 @@ module JCP
     end
 
     class NoClass
-      include JCP
+      include Parser
 
       def initialize(stream, constant_pool, limit)
         limit.times { stream.readbyte unless stream.eof? }

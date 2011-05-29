@@ -1,6 +1,6 @@
 module JCP
   module Fields
-    include JCP
+    include Parser
     extend self
 
     ACCESS_FLAGS = {
@@ -20,7 +20,7 @@ module JCP
     end
 
     class Field
-      include JCP
+      include Parser
 
       attr_reader :access_flags, :name, :descriptor, :attributes
 
