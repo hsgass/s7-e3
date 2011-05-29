@@ -4,7 +4,7 @@ module JCP
     extend self
 
     def parse(stream, constant_pool)
-      class_name  = constant_pool[read2_bytes(stream)]
+      class_name  = constant_pool[read_2_bytes(stream)]
       limit = stream.read(4).unpack('N').first
 
       attribute_class = Attributes.const_get(class_name) || NoClass
@@ -15,7 +15,7 @@ module JCP
       include Parser
 
       def initialize(stream, constant_pool, limit)
-        @value = constant_pool[read2_bytes(stream)]
+        @value = constant_pool[read_2_bytes(stream)]
       end
 
       def to_s

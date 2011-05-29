@@ -14,7 +14,7 @@ module JCP
     }
 
     def parse_descriptor(stream, constant_pool)
-      d = constant_pool[read2_bytes(stream)]
+      d = constant_pool[read_2_bytes(stream)]
       d.gsub! /[\(\)]/, ''
 
       descriptor = DESCRIPTORS[d]
@@ -29,7 +29,7 @@ module JCP
 
     def parse_elements(clazz, stream, constant_pool)
       elements   = []
-      count = read2_bytes(stream)
+      count = read_2_bytes(stream)
       (1..count).each do
         elements << clazz.new(stream, constant_pool) unless stream.eof?
       end
@@ -39,7 +39,7 @@ module JCP
 
     def parse_access_flags(flag_hash, stream)
       access_flags = []
-      flag_bytes   = read2_bytes stream
+      flag_bytes   = read_2_bytes stream
       flag_hash.each { |k, v| access_flags << v if (flag_bytes & k > 0) }
 
       access_flags
@@ -47,7 +47,7 @@ module JCP
 
     def parse_attributes(stream, constant_pool)
       attributes = []
-      count      = read2_bytes(stream)
+      count      = read_2_bytes(stream)
       (1..count).each do
         attributes << Attributes.parse(stream, constant_pool)
       end
@@ -55,7 +55,7 @@ module JCP
       attributes
     end
 
-    def read2_bytes(stream)
+    def read_2_bytes(stream)
       stream.read(2).unpack('n').first
     end
 
@@ -64,7 +64,7 @@ module JCP
     end
 
     def parse_string(stream)
-      byte_count = read2_bytes(stream)
+      byte_count = read_2_bytes(stream)
       stream.read(byte_count).unpack("A#{byte_count}").first
     end
 
@@ -95,11 +95,11 @@ module JCP
     end
 
     def parse_single_ref(stream)
-      read2_bytes(stream)
+      read_2_bytes(stream)
     end
 
     def parse_multi_ref(stream)
-      [read2_bytes(stream), read2_bytes(stream)]
+      [read_2_bytes(stream), read_2_bytes(stream)]
     end
   end
 end

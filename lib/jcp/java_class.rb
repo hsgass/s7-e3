@@ -22,8 +22,8 @@ module JCP
         get_version(stream)
         @constant_pool = ConstantPool.new(stream)
         @access_flags  = parse_access_flags ACCESS_FLAGS, stream
-        @class         = @constant_pool[read2_bytes(stream)].gsub(/\//, '.')
-        @superclass    = @constant_pool[read2_bytes(stream)].gsub(/\//, '.')
+        @class         = @constant_pool[read_2_bytes(stream)].gsub(/\//, '.')
+        @superclass    = @constant_pool[read_2_bytes(stream)].gsub(/\//, '.')
         @interfaces    = Interfaces.parse(stream, @constant_pool)
         @fields        = Fields.parse(stream, @constant_pool)
         @methods       = Methods.parse(stream, @constant_pool)
@@ -42,8 +42,8 @@ module JCP
     end
 
     def get_version(stream)
-      minor    = read2_bytes stream
-      major    = read2_bytes stream
+      minor    = read_2_bytes stream
+      major    = read_2_bytes stream
       @version = "#{major}.#{minor}"
     end
   end

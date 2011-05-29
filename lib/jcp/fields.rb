@@ -26,7 +26,7 @@ module JCP
 
       def initialize(stream, constant_pool)
         @access_flags = parse_access_flags ACCESS_FLAGS, stream
-        @name         = constant_pool[read2_bytes(stream)]
+        @name         = constant_pool[read_2_bytes(stream)]
         @descriptor   = parse_descriptor(stream, constant_pool)
         @attributes   = parse_attributes(stream, constant_pool)
       end

@@ -24,7 +24,7 @@ module JCP
       # limit indicates the number of "slots" in the constant pool.
       # longs and doubles consume 2 slots, so there must
       # be one less read per long or double value.
-      limit = (read2_bytes stream) - 1
+      limit = (read_2_bytes stream) - 1
       skip  = false
       (1..limit).each do
         if skip
